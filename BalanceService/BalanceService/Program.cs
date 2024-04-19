@@ -1,9 +1,22 @@
+using System.Reflection;
+using BalanceService.Balances.Infrastructure.Cross_Cutting;
+using BalanceService.Balances.Infrastructure.Repositories;
+using BalanceService.Balances.Presentation.BackgroundServices;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddScoped<IBalanceRepository, BalanceRepository>(provider => new BalanceRepository(new BalancesContext(builder.Configuration)));
+
+
+// builder.Services.AddHostedService<UpdateBalanceConsumerService>();
+
+
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 
 var app = builder.Build();
 
