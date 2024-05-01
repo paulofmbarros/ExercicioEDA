@@ -6,7 +6,6 @@ riderModule.iml
 /idea/
 
 
-/docker-compose.yml
 /laravel
 /mysql
 /nginx
