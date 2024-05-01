@@ -27,7 +27,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Balances\Application\Queries\" />
       <Folder Include="Balances\Presentation\Controllers\" />
     </ItemGroup>
 

@@ -2,19 +2,31 @@
 
 public class Balance
 {
-    public int Id { get; private set; }
-    public string AccountId { get; private set; }
-    public decimal Amount { get; private set; }
+    public virtual int Id { get; private set; }
+    public Guid AccountId { get; set; }
+    public decimal Amount { get; set; }
 
-    public Balance(int id, string accountId, decimal amount)
+    public Balance(int id, Guid accountId, decimal amount)
     {
         Id = id;
         AccountId = accountId;
         Amount = amount;
     }
 
+    public Balance(Guid accountId, decimal amount)
+    {
+        AccountId = accountId;
+        Amount = amount;
+    }
+
+    public Balance()
+    {
+    }
+
+
+
     public void UpdateAmount(decimal amount)
     {
-        Amount = amount;
+        this.Amount = amount;
     }
 }

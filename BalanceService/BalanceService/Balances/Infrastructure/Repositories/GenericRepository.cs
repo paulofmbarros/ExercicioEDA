@@ -7,14 +7,15 @@ namespace BalanceService.Balances.Infrastructure.Repositories;
 public class GenericRepository<TEntity> : IRepository<TEntity>
     where TEntity : class
 {
-    protected readonly BalancesContext _context;
+    protected readonly BalancesContext Context;
 
     protected readonly DbSet<TEntity> _entities;
 
+    public IUnitOfWork UnitOfWork => Context;
 
     public GenericRepository(BalancesContext context)
     {
-        _context = context;
+        Context = context;
         _entities =  context.Set<TEntity>();;
     }
     public async Task<TEntity> AddAsync(TEntity entity)

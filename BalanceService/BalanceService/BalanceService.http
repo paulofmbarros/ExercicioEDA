@@ -1,6 +1,6 @@
-@BalanceService_HostAddress = http://localhost:5133
+@BalanceService_HostAddress = http://localhost:3003
 
-GET {{BalanceService_HostAddress}}/weatherforecast/
+GET {{BalanceService_HostAddress}}/balances/311a7ff6-9394-4d3d-ae16-112684cc647d
 Accept: application/json
 
 ###

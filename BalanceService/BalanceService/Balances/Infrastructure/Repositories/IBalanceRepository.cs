@@ -5,5 +5,5 @@ namespace BalanceService.Balances.Infrastructure.Repositories;
 
 public interface IBalanceRepository : IRepository<Balance>
 {
-    Task<Balance?> GetByAccountId(string accountId);
+    Task<Balance?> GetByAccountId(Guid accountId);
 }

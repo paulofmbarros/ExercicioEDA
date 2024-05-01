@@ -1,7 +1,11 @@
 using System.Reflection;
+using BalanceService.Balances.Application.Queries;
 using BalanceService.Balances.Infrastructure.Cross_Cutting;
 using BalanceService.Balances.Infrastructure.Repositories;
 using BalanceService.Balances.Presentation.BackgroundServices;
+using MediatR;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,8 +14,14 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddScoped<IBalanceRepository, BalanceRepository>(provider => new BalanceRepository(new BalancesContext(builder.Configuration)));
 
+builder.Services.AddScoped<IBalanceRepository, BalanceRepository>();
+
+builder.Services.AddDbContext<BalancesContext>(
+    options => options.UseMySql(
+        builder.Configuration.GetConnectionString("WebApiDatabase"),
+        ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("WebApiDatabase")))
+);
 
 // builder.Services.AddHostedService<UpdateBalanceConsumerService>();
 
@@ -19,6 +29,14 @@ builder.Services.AddScoped<IBalanceRepository, BalanceRepository>(provider => ne
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var context = services.GetRequiredService<BalancesContext>();
+    context.Database.EnsureCreated();
+}
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -34,24 +52,15 @@ var summaries = new[]
     "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
 };
 
-app.MapGet("/weatherforecast", () =>
+app.MapGet("/balances/{accountId}", async (Guid accountId, IMediator mediator) =>
     {
-        var forecast = Enumerable.Range(1, 5).Select(index =>
-                new WeatherForecast
-                (
-                    DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                    Random.Shared.Next(-20, 55),
-                    summaries[Random.Shared.Next(summaries.Length)]
-                ))
-            .ToArray();
-        return forecast;
+        var query = new GetBalanceByAccountId.Query(accountId);
+        var account = await mediator.Send(query);
+
+        return Results.Ok(account);
+
     })
-    .WithName("GetWeatherForecast")
+    .WithName("GetBalances")
     .WithOpenApi();
 
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
