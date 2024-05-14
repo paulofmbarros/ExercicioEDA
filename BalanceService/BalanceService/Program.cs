@@ -15,6 +15,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 
+
 builder.Services.AddScoped<IBalanceRepository, BalanceRepository>();
 
 builder.Services.AddDbContext<BalancesContext>(
@@ -47,10 +48,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+
 
 app.MapGet("/balances/{accountId}", async (Guid accountId, IMediator mediator) =>
     {

@@ -5,8 +5,7 @@
       context: .
       dockerfile: Dockerfile
     ports:
-        - "3003:8080"
-        - "3004:8081"
+        - "8080:8080"
     depends_on:
         - mysql
 
