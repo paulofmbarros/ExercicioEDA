@@ -8,5 +8,6 @@ if [ ! -d "$DATADIR/mysql" ]; then
             *.sql.gz) echo "$0: running $f"; gunzip -c "$f" | "${mysql[@]}"; echo ;;
             *)        echo "$0: ignoring $f" ;;
         esac
-        echo
-    done 
+    done
+fi
+

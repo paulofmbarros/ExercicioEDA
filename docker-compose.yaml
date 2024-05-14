@@ -1,25 +1,40 @@
-﻿services:
+services:
   balanceservice:
     image: balanceservice
     build:
-      context: .
+      context: /BalanceService/BalanceService/.
       dockerfile: Dockerfile
     ports:
         - "8080:8080"
     depends_on:
-        - balance-db
+        - mysql
+        - kafka
 
-  balance-db:
+  goapp: 
+    build: 
+      context: fc-eda/.
+      dockerfile: Dockerfile
+    platform: linux/amd64
+    volumes:
+      - /fc-eda/.:/app
+    ports:
+      - 3000:3000
+    depends_on:
+      - kafka
+      - mysql
+
+  mysql:
     image: mysql:5.7
     platform: linux/amd64
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: balances
       MYSQL_PASSWORD: root
     ports:
       - 3306:3306
     volumes:
-      - .docker/mysql:/var/lib/mysql
+      - ./fc-eda/dump/docker-entrypoint.sh:/docker-entrypoint-initdb.d/docker-entrypoint.sh
+      - ./fc-eda/dump/dump.sql:/docker-entrypoint-initdb.d/init-script.sql
+      - ./fc-eda/.docker/mysql:/var/lib/mysql
 
   zookeeper:
     image: "confluentinc/cp-zookeeper:6.1.0"
