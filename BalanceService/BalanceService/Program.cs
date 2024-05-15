@@ -24,7 +24,7 @@ builder.Services.AddDbContext<BalancesContext>(
         ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("WebApiDatabase")))
 );
 
-// builder.Services.AddHostedService<UpdateBalanceConsumerService>();
+builder.Services.AddHostedService<UpdateBalanceConsumerService>();
 
 
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));

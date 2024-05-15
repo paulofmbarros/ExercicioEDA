@@ -21,7 +21,7 @@ import (
 )
 
 func main() {
-	db, err := sql.Open("mysql", "root:root@tcp(mysql:3306)/wallet")
+	db, err := sql.Open("mysql", "root:root@tcp(mysql:3306)/wallet?parseTime=true")
 	if err != nil {
 		panic(err)
 	}

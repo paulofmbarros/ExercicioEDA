@@ -2,6 +2,7 @@ package create_transaction
 
 import (
 	"context"
+	"fmt"
 
 	"github.com.br/devfullcycle/fc-ms-wallet/internal/entity"
 	"github.com.br/devfullcycle/fc-ms-wallet/internal/gateway"
@@ -59,29 +60,40 @@ func (uc *CreateTransactionUseCase) Execute(ctx context.Context, input CreateTra
 
 		accountFrom, err := accountRepository.FindByID(input.AccountIDFrom)
 		if err != nil {
+			fmt.Println("Erro ao buscar a de origem")
+			panic(err)
 			return err
 		}
 		accountTo, err := accountRepository.FindByID(input.AccountIDTo)
 		if err != nil {
+			fmt.Println("Erro ao buscar a de destino")
+			panic(err)
 			return err
 		}
 		transaction, err := entity.NewTransaction(accountFrom, accountTo, input.Amount)
 		if err != nil {
+			fmt.Println("Erro ao criar a transação")
+			panic(err)
 			return err
 		}
 
 		err = accountRepository.UpdateBalance(accountFrom)
 		if err != nil {
+			fmt.Println("Erro ao atualizar o saldo da conta de origem")
+			panic(err)
 			return err
 		}
 
 		err = accountRepository.UpdateBalance(accountTo)
 		if err != nil {
+			fmt.Println("Erro ao atualizar o saldo da conta de destino")
+			panic(err)
 			return err
 		}
 
 		err = transactionRepository.Create(transaction)
 		if err != nil {
+			fmt.Println("Erro ao salvar a transação")
 			return err
 		}
 		output.ID = transaction.ID

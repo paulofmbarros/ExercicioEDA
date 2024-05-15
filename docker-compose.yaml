@@ -16,7 +16,7 @@ services:
       dockerfile: Dockerfile
     platform: linux/amd64
     volumes:
-      - /fc-eda/.:/app
+      - ./fc-eda/.:/app
     ports:
       - 3000:3000
     depends_on:
