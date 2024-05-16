@@ -1,6 +1,6 @@
-@BalanceService_HostAddress = http://localhost:8080
+@BalanceService_HostAddress = http://localhost:3003
 
-GET {{BalanceService_HostAddress}}/balances/bc5eb76d-5e62-40c8-b49b-8460358797dc
+GET {{BalanceService_HostAddress}}/balances/9b4e40f8-d760-4d17-adbf-36bdffab5015
 Accept: application/json
 
 ###

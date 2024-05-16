@@ -16,29 +16,29 @@ public class UpdateBalanceCommandHandler : IRequestHandler<UpdateBalanceCommand,
 
     public async Task<Unit> Handle(UpdateBalanceCommand request, CancellationToken cancellationToken)
     {
-        var balanceFrom = await _balanceRepository.GetByAccountId(Guid.Parse( request.AccountIdFrom));
+        var accountFrom = await _balanceRepository.GetByAccountId(Guid.Parse( request.AccountIdFrom));
 
-        if (balanceFrom is null)
+        if (accountFrom is null)
         {
             var balance = new Balance(Guid.Parse(request.AccountIdFrom), request.BalanceAccountIdFrom);
             await this._balanceRepository.AddAsync(balance);
         }
 
-        var balanceTo = await _balanceRepository.GetByAccountId(Guid.Parse(request.AccountIdTo));
+        var accountTo = await _balanceRepository.GetByAccountId(Guid.Parse(request.AccountIdTo));
 
-        if (balanceTo is null)
+        if (accountTo is null)
         {
             var balance = new Balance(Guid.Parse(request.AccountIdTo), request.BalanceAccountIdTo);
             await this._balanceRepository.AddAsync(balance);
         }
 
-        if(balanceFrom is not null && balanceTo is not null)
+        if(accountFrom is not null && accountTo is not null)
         {
-            balanceFrom.UpdateAmount(request.BalanceAccountIdFrom);
-            balanceTo.UpdateAmount(request.BalanceAccountIdTo);
+            accountFrom.UpdateAmount(request.BalanceAccountIdFrom);
+            accountTo.UpdateAmount(request.BalanceAccountIdTo);
 
-            await _balanceRepository.UpdateAsync(balanceFrom);
-            await _balanceRepository.UpdateAsync(balanceTo);
+            await _balanceRepository.UpdateAsync(accountFrom);
+            await _balanceRepository.UpdateAsync(accountTo);
         }
 
 
