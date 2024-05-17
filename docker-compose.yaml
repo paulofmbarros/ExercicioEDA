@@ -2,13 +2,15 @@ services:
   balanceservice:
     image: balanceservice
     build:
-      context: /BalanceService/BalanceService/.
+      context: .
       dockerfile: Dockerfile
     ports:
         - 3003:8080
     depends_on:
-        - mysql
+        - mysqlEDA
         - kafka
+    networks:
+        - custom_network
 
 
   goapp: 
@@ -22,9 +24,11 @@ services:
       - 3000:3000
     depends_on:
       - kafka
-      - mysql
+      - mysqlEDA
+    networks:
+        - custom_network
 
-  mysql:
+  mysqlEDA:
     image: mysql:5.7
     platform: linux/amd64
     environment:
@@ -36,6 +40,9 @@ services:
       - ./fc-eda/dump/docker-entrypoint.sh:/docker-entrypoint-initdb.d/docker-entrypoint.sh
       - ./fc-eda/dump/dump.sql:/docker-entrypoint-initdb.d/init-script.sql
       - ./fc-eda/.docker/mysql:/var/lib/mysql
+    networks:
+        - custom_network
+    container_name: mysqlEDA
 
 
   zookeeper:
@@ -47,6 +54,8 @@ services:
       TZ: Sao_Paulo/Brazil
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
+    networks:
+        - custom_network
 
 
   kafka:
@@ -72,6 +81,8 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 100
       CONFLUENT_METRICS_ENABLE: 'false'
+    networks:
+        - custom_network
 
 
 
@@ -84,7 +95,8 @@ services:
       - kafka
     ports:
       - "9021:9021"
-
+    networks:
+        - custom_network
     environment:
       CONTROL_CENTER_BOOTSTRAP_SERVERS: 'kafka:29092'
       CONTROL_CENTER_REPLICATION_FACTOR: 1
@@ -92,3 +104,7 @@ services:
       CONTROL_CENTER_MONITORING_INTERCEPTOR_TOPIC_PARTITIONS: 1
       CONFLUENT_METRICS_TOPIC_REPLICATION: 1
       PORT: 9021
+
+networks:
+      custom_network:
+        driver: bridge

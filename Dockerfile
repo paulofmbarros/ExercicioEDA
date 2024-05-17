@@ -8,9 +8,9 @@ EXPOSE 3003
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["BalanceService.csproj", "./"]
+COPY ["./BalanceService/BalanceService/BalanceService.csproj", "./"]
 RUN dotnet restore "BalanceService.csproj"
-COPY . .
+COPY /BalanceService/BalanceService/. .
 WORKDIR "/src/"
 RUN dotnet build "BalanceService.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
