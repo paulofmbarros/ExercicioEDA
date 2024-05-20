@@ -23,8 +23,8 @@ services:
     ports:
       - 3000:3000
     depends_on:
-      - kafka
-      - mysqlEDA
+      mysqlEDA:
+          condition: service_healthy
     networks:
         - custom_network
 
