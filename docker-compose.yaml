@@ -6,8 +6,9 @@ services:
       dockerfile: Dockerfile
     ports:
         - 3003:8080
-    mysqlEDA:
-        condition: service_healthy
+    depends_on:
+      mysqlEDA:
+          condition: service_healthy
     networks:
         - custom_network
 
